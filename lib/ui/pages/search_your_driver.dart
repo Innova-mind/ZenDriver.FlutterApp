@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zendriver/ui/pages/filtered_drivers.dart';
 
 class SearchYourDriver extends StatefulWidget {
   const SearchYourDriver({super.key});
@@ -125,7 +126,9 @@ class _SearchYourDriverState extends State<SearchYourDriver> {
                     backgroundColor: const Color.fromRGBO(0, 150, 136, 1),
                   ),
                   onPressed: () {
-                    //Navigator.pop(context);
+                    Navigator.push(context,
+                    
+                    MaterialPageRoute(builder: (context) => const FilteredDrivers()));
                   },
                   child: const Text(
                     'Filtrar ya',
