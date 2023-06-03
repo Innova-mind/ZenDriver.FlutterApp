@@ -16,7 +16,7 @@ class Routes extends StatelessWidget {
       const Home(),
       const SearchYourDriver(),
       MessageList(),
-      const Notifications(),
+      //const Notifications(),
       const Profile(),
     ];
 
