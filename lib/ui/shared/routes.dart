@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zendriver/ui/pages/home.dart';
-import 'package:zendriver/ui/pages/messages.dart';
+import 'package:zendriver/ui/pages/messages_list.dart';
 import 'package:zendriver/ui/pages/notifications.dart';
 import 'package:zendriver/ui/pages/profile.dart';
 import 'package:zendriver/ui/pages/search_your_driver.dart';
@@ -15,7 +15,7 @@ class Routes extends StatelessWidget {
     List<Widget> routes = [
       const Home(),
       const SearchYourDriver(),
-      const Messages(),
+      MessageList(),
       const Notifications(),
       const Profile(),
     ];
