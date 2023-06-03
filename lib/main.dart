@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:zendriver/ui/shared/bottom_nav.dart';
 import 'package:zendriver/ui/shared/routes.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.lightBlue
+    ),
+  );
   runApp(const MainApp());
 }
 
