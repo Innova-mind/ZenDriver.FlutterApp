@@ -10,6 +10,8 @@ class SearchYourDriver extends StatefulWidget {
 
 class _SearchYourDriverState extends State<SearchYourDriver> {
   final _licenseList = ["AI", "AIIA", "AIIB", "AIIIB", "AIIIA", "AIIIC"];
+
+  
   String? selectedlicense = "AI";
 
   @override
@@ -75,18 +77,6 @@ class _SearchYourDriverState extends State<SearchYourDriver> {
               decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10))),
-                  hintText: 'Departamento'),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
-            width: 350,
-            child: const TextField(
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
                   hintText: 'Grado de estudios'),
             ),
           ),
@@ -117,6 +107,7 @@ class _SearchYourDriverState extends State<SearchYourDriver> {
           const SizedBox(
             height: 20,
           ),
+          
           ButtonBar(
             mainAxisSize: MainAxisSize.min,
             children: [
