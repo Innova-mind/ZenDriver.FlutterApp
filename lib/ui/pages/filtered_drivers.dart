@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zendriver/models/driver_profile.dart';
 import 'package:zendriver/services/driver_profile_service.dart';
+import 'package:zendriver/ui/pages/filtered_driver_item.dart';
 
 class FilteredDrivers extends StatefulWidget {
   const FilteredDrivers({Key? key}) : super(key: key);
@@ -21,13 +22,11 @@ class _FilteredDriversState extends State<FilteredDrivers> {
     });
   }
 
-
   @override
   void initState() {
     super.initState();
     initialize();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +34,15 @@ class _FilteredDriversState extends State<FilteredDrivers> {
       appBar: AppBar(
         title: const Text('Conductores filtrados'),
       ),
-      body: Container(
-        color: Colors.grey[200],
-        padding: const EdgeInsets.all(16.0),
-        
+      body: CustomScrollView(
+        slivers: [
+          SliverList.builder(
+            itemCount: profiles?.length,
+            itemBuilder: (context, index) {
+              return DriverItem(driverProfile: profiles![index]);
+            },
+          )
+        ],
       ),
     );
   }

@@ -7,16 +7,14 @@ class DriverProfile{
     int id;
     Driver driver;
     License license;
-    Education education;
-    
 
-    DriverProfile({required this.id, required this.driver, required this.license, required this.education});
+
+    DriverProfile({required this.id, required this.driver, required this.license});
 
 
     DriverProfile.fromJson(Map<String, dynamic> json) 
       : id = json['id'],
         driver = Driver.fromJson(json['driver']),
-        license = License.fromJson(json['license']),
-        education = Education.fromJson(json['education']);
+        license = License.fromJson(json['license']);
 
 }

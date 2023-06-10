@@ -21,13 +21,13 @@ class User {
   User.fromJson(Map<String, dynamic> json)
       : firstName = json['firstName'],
         lastName = json['lastName'],
-        username = json['username'],
+        username = json['userName'],
         password = json['password'],
         phone = json['phone'],
         role = json['role'],
         description = json['description'],
         imageUrl = json['imageUrl'];
-        
+
 
 
   Map<String, dynamic> toJson() {
