@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:zendriver/models/message.dart';
+import 'package:zendriver/services/message_service.dart';
 
 class Messages extends StatefulWidget {
   const Messages({Key? key}) : super(key: key);
@@ -9,10 +11,20 @@ class Messages extends StatefulWidget {
 
 class _MessagesState extends State<Messages> with SingleTickerProviderStateMixin {
   TextEditingController messageController = TextEditingController();
-  List<String> messages = [];
+  List<Message>? messages;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   late AnimationController _animationController;
   late Tween<Offset> _offsetTween;
+
+  MessageService httpHelper = MessageService();
+
+  Future initialize() async {
+    messages = List.empty();
+    messages = await httpHelper.getMessages();
+    setState(() {
+      messages = messages;
+    });
+  }
 
   @override
   void initState() {
@@ -27,7 +39,7 @@ class _MessagesState extends State<Messages> with SingleTickerProviderStateMixin
   void _sendMessage(String message) {
     if (message.isNotEmpty) {
       setState(() {
-        messages.insert(0, message);
+        //messages.insert(0, message);
         _listKey.currentState?.insertItem(0);
       });
       messageController.clear();
@@ -55,7 +67,7 @@ class _MessagesState extends State<Messages> with SingleTickerProviderStateMixin
             child: AnimatedList(
               key: _listKey,
               reverse: true,
-              initialItemCount: messages.length,
+              initialItemCount: messages!.length,
               itemBuilder: (BuildContext context, int index, Animation<double> animation) {
                 return SlideTransition(
                   position: animation.drive(_offsetTween),
@@ -69,7 +81,7 @@ class _MessagesState extends State<Messages> with SingleTickerProviderStateMixin
                         borderRadius: BorderRadius.circular(16.0),
                       ),
                       child: Text(
-                        messages[index],
+                        messages![index].content,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16.0,
