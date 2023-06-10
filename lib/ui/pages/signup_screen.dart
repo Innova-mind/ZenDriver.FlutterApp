@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../login/authenticate.dart';
-import '../../login/http_helper.dart';
+import '../../models/user.dart';
+import '../../services/login_service.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -10,7 +10,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  HttpHelper httpHelper = HttpHelper();
+  LoginService httpHelper = LoginService();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();

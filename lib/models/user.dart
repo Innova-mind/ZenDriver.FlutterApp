@@ -1,19 +1,3 @@
-class LoginResponse {
-  final String id;
-  final String username;
-  final String token;
-
-  LoginResponse({required this.id, required this.username, required this.token});
-
-  factory LoginResponse.fromJson(Map<String, dynamic> json) {
-    return LoginResponse(
-      id: json['id'].toString(),
-      username: json['username'],
-      token: json['token'],
-    );
-  }
-}
-
 class User {
   final String firstName;
   final String lastName;
@@ -48,6 +32,24 @@ class User {
     };
   }
 }
+
+class LoginResponse {
+  final String id;
+  final String username;
+  final String token;
+
+  LoginResponse({required this.id, required this.username, required this.token});
+
+  factory LoginResponse.fromJson(Map<String, dynamic> json) {
+    return LoginResponse(
+      id: json['id'].toString(),
+      username: json['username'],
+      token: json['token'],
+    );
+  }
+}
+
+
 
 class SignupResponse {
   final String message;

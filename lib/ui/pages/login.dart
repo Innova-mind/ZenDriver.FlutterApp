@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:zendriver/ui/pages/signup_screen.dart';
 import 'package:zendriver/ui/shared/base.dart';
 
-import '../../login/authenticate.dart';
-import '../../login/http_helper.dart';
+import '../../models/user.dart';
+import '../../services/login_service.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -13,7 +13,7 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
-  HttpHelper httpHelper = HttpHelper();
+  LoginService httpHelper = LoginService();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();

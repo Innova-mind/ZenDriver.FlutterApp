@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'authenticate.dart';
 import 'package:http/http.dart' as http;
-class HttpHelper {
+
+import '../models/user.dart';
+class LoginService {
   final String baseUrl = 'https://zendriver.azurewebsites.net/api/v1/users/';
   //final String baseUrl = 'http://192.168.1.2/api/v1/users/';
 
