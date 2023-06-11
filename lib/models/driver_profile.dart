@@ -1,4 +1,3 @@
-import 'package:zendriver/models/education.dart';
 import 'package:zendriver/models/license.dart';
 
 import 'driver.dart';

@@ -7,6 +7,7 @@ class User {
   final String role;
   final String description;
   final String imageUrl;
+  final String birthdayDate;
 
   User({
     required this.firstName,
@@ -17,6 +18,7 @@ class User {
     required this.role,
     required this.description,
     required this.imageUrl,
+    required this.birthdayDate,
   });
   User.fromJson(Map<String, dynamic> json)
       : firstName = json['firstName'],
@@ -26,7 +28,8 @@ class User {
         phone = json['phone'],
         role = json['role'],
         description = json['description'],
-        imageUrl = json['imageUrl'];
+        imageUrl = json['imageUrl'],
+        birthdayDate = json['birthdayDate'];
 
 
 
@@ -40,6 +43,7 @@ class User {
       'role': role,
       'description': description,
       'imageUrl': imageUrl,
+      'birthdayDate': birthdayDate,
     };
   }
 }

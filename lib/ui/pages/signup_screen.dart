@@ -20,6 +20,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _roleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _imageUrlController = TextEditingController();
+  final TextEditingController _birthdayDateController = TextEditingController();
   bool _isButtonEnabled = false;
 
   @override
@@ -32,6 +33,7 @@ class _SignupScreenState extends State<SignupScreen> {
     _roleController.dispose();
     _descriptionController.dispose();
     _imageUrlController.dispose();
+    _birthdayDateController.dispose();
     super.dispose();
   }
 
@@ -72,6 +74,7 @@ class _SignupScreenState extends State<SignupScreen> {
         role: '-',
         description: '-',
         imageUrl: '-',
+        birthdayDate: '-',
       );
       SignupResponse? response = await httpHelper.signUp(user);
       returnToSignIn(response);
@@ -141,6 +144,16 @@ class _SignupScreenState extends State<SignupScreen> {
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your password';
+              }
+              return null;
+            },
+          ),
+          TextFormField(
+            controller: _birthdayDateController,
+            decoration: const InputDecoration(labelText: 'Birtday Date (yyyy-mm-dd)'), 
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your Birthday Date';
               }
               return null;
             },

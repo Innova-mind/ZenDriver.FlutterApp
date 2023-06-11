@@ -11,11 +11,12 @@ class DriverProfileService{
 
 
 
-  Future<List<DriverProfile>> getProfiles() async{
+  Future<List<DriverProfile>> getProfiles(licenseType) async{
     final response = await http.get(Uri.parse(driverProfilebaseUrl));
     if(response.statusCode == HttpStatus.ok){
       final profiles = json.decode(response.body).cast<Map<String, dynamic>>();
-      return profiles.map<DriverProfile>((json) => DriverProfile.fromJson(json)).toList();
+      final filteredProfiles = profiles.where((profile) => profile['license']['category'] == licenseType).toList();
+      return filteredProfiles.map<DriverProfile>((json) => DriverProfile.fromJson(json)).toList();
     }else{
       throw Exception('Failed to load profiles');
     }

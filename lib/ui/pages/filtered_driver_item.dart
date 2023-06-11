@@ -28,8 +28,8 @@ class _DriverItemState extends State<DriverItem> {
               height: 200,
               width: 200,
               child: Image(
-                  image: NetworkImage('https://www.drakonball.com/wp-content/uploads/2023/02/los-mejores-memes-de-dragon-ball.jpg'),
-                  // image: NetworkImage(widget.driverProfile.driver.user!.imageUrl),
+                  //image: NetworkImage('https://www.drakonball.com/wp-content/uploads/2023/02/los-mejores-memes-de-dragon-ball.jpg'),
+                  image: NetworkImage(widget.driverProfile.driver.user!.imageUrl),
                   width: 50,
                   height: 50),
             ),
@@ -42,7 +42,9 @@ class _DriverItemState extends State<DriverItem> {
                   const SizedBox(height: 16),
                   Text(widget.driverProfile.driver.user!.role),
                   const SizedBox(height: 16),
-                  TextButton(onPressed: (){}, child: 
+                  TextButton(onPressed: (){
+                    
+                  }, child: 
                     const Text("Ver perfil", style: TextStyle(color: Colors.white),),
                   )                  
                 ],
