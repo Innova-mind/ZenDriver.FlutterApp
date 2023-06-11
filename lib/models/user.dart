@@ -1,7 +1,8 @@
 class User {
+  final int id;
   final String firstName;
   final String lastName;
-  final String username;
+  final String? username;
   final String password;
   final String phone;
   final String role;
@@ -9,6 +10,7 @@ class User {
   final String imageUrl;
 
   User({
+    required this.id,
     required this.firstName,
     required this.lastName,
     required this.username,
@@ -19,7 +21,8 @@ class User {
     required this.imageUrl,
   });
   User.fromJson(Map<String, dynamic> json)
-      : firstName = json['firstName'],
+      : id = json['id'],
+        firstName = json['firstName'],
         lastName = json['lastName'],
         username = json['username'],
         password = json['password'],
@@ -32,6 +35,7 @@ class User {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'firstName': firstName,
       'lastName': lastName,
       'username': username,

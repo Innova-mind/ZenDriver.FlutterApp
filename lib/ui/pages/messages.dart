@@ -4,7 +4,6 @@ import 'package:zendriver/services/message_service.dart';
 
 class Messages extends StatefulWidget {
   const Messages({Key? key}) : super(key: key);
-
   @override
   State<Messages> createState() => _MessagesState();
 }
@@ -28,12 +27,13 @@ class _MessagesState extends State<Messages> with SingleTickerProviderStateMixin
 
   @override
   void initState() {
-    super.initState();
+    initialize();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
     _offsetTween = Tween<Offset>(begin: const Offset(1.0, 0.0), end: Offset.zero);
+    super.initState();
   }
 
   void _sendMessage(String message) {

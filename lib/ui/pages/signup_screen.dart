@@ -64,6 +64,7 @@ class _SignupScreenState extends State<SignupScreen> {
   void signUp() async {
     try {
       User user = User(
+        id: 0,
         firstName: _firstNameController.text,
         lastName: _lastNameController.text,
         username: _usernameController.text,
@@ -105,7 +106,8 @@ class _SignupScreenState extends State<SignupScreen> {
       onChanged: _validateForm,
       child: Column(
         children: [
-          TextFormField(
+          SizedBox(height: 50)
+          ,TextFormField(
             controller: _firstNameController,
             decoration: const InputDecoration(labelText: 'First Name'),
             validator: (value) {
