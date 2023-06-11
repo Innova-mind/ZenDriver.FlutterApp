@@ -91,8 +91,8 @@ class _SigninScreenState extends State<SigninScreen> {
               TextFormField(
                 controller: _usernameController,
                 decoration: const InputDecoration(
-                  labelText: 'Username',
-                  hintText: 'Username',
+                  labelText: 'username',
+                  hintText: 'username',
                   prefixIcon: Icon(Icons.person),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
