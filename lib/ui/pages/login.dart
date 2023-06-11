@@ -73,44 +73,55 @@ class _SigninScreenState extends State<SigninScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
-        body: Form(
-      key: _formKey,
-      onChanged: _validateForm,
-      child: Column(
-        children: [
-          SizedBox(height: 50),
-          TextFormField(
-            controller: _usernameController,
-            decoration: const InputDecoration(labelText: 'User Name'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your user name';
-              }
-              return null;
-            },
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(50),
+          child: Form(
+          key: _formKey,
+          onChanged: _validateForm,
+          child: Column(
+            children: [
+              ClipOval(
+                  child: Image.asset(
+                'assets/logo.png',
+                height: size.height * 0.25,
+              )),
+              const SizedBox(height: 50),
+              TextFormField(
+                controller: _usernameController,
+                decoration: const InputDecoration(labelText: 'User Name'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your user name';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _passwordController,
+                decoration: const InputDecoration(labelText: 'Password'),
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
+                  }
+                  return null;
+                },
+              ),
+              ElevatedButton(
+                onPressed: _isButtonEnabled ? signIn: null,
+                child: const Text('Sign In'),
+              ),
+              ElevatedButton(
+                onPressed: navigateToSignup,
+                child: const Text('Sign Up'),
+              ),
+            ],
           ),
-          TextFormField(
-            controller: _passwordController,
-            decoration: const InputDecoration(labelText: 'Password'),
-            obscureText: true,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your password';
-              }
-              return null;
-            },
-          ),
-          ElevatedButton(
-            onPressed: _isButtonEnabled ? signIn: null,
-            child: const Text('Sign In'),
-          ),
-          ElevatedButton(
-            onPressed: navigateToSignup,
-            child: const Text('Sign Up'),
-          ),
-        ],
-      ),
-    ));
+            ),
+        ),
+      ));
   }
 }

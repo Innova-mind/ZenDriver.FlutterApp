@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 
 import '../models/user.dart';
 class LoginService {
-  final String baseUrl = 'https://zendriver.azurewebsites.net/api/v1/users/';
-  //final String baseUrl = 'http://192.168.1.2/api/v1/users/';
+  //final String baseUrl = 'https://zendriver.azurewebsites.net/api/v1/users/';
+  final String baseUrl = 'http://192.168.1.16/api/v1/users/';
 
   Future<LoginResponse> login(String name, String password) async {
     final url = '${baseUrl}sign-in';
@@ -18,7 +18,7 @@ class LoginService {
     }));
     if (response.statusCode == HttpStatus.ok) {
       return LoginResponse.fromJson(json.decode(response.body));
-    } else if (response.statusCode == 500) {
+    } else if (response.statusCode == HttpStatus.badRequest) {
       throw Exception('Incorrect username or password');
     } else {
       throw Exception('Failed to login');

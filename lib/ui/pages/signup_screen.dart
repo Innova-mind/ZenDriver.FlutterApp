@@ -14,8 +14,9 @@ class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordConfirmController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _roleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -27,8 +28,9 @@ class _SignupScreenState extends State<SignupScreen> {
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
-    _usernameController.dispose();
+    _userNameController.dispose();
     _passwordController.dispose();
+    _passwordConfirmController.dispose();
     _phoneController.dispose();
     _roleController.dispose();
     _descriptionController.dispose();
@@ -69,7 +71,7 @@ class _SignupScreenState extends State<SignupScreen> {
         id: 0,
         firstName: _firstNameController.text,
         lastName: _lastNameController.text,
-        username: _usernameController.text,
+        userName: _userNameController.text,
         password: _passwordController.text,
         phone: '-',
         role: '-',
@@ -104,68 +106,86 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Form(
-      key: _formKey,
-      onChanged: _validateForm,
-      child: Column(
-        children: [
-          SizedBox(height: 50)
-          ,TextFormField(
-            controller: _firstNameController,
-            decoration: const InputDecoration(labelText: 'First Name'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your first name';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _lastNameController,
-            decoration: const InputDecoration(labelText: 'Last Name'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your last name';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _usernameController,
-            decoration: const InputDecoration(labelText: 'User Name'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your user name';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _passwordController,
-            decoration: const InputDecoration(labelText: 'Password'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your password';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _birthdayDateController,
-            decoration: const InputDecoration(labelText: 'Birtday Date (yyyy-mm-dd)'), 
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your Birthday Date';
-              }
-              return null;
-            },
-          ),
-          ElevatedButton(
-            onPressed: _isButtonEnabled ? signUp : null,
-            child: const Text('Sign Up'),
-          ),
-        ],
-      ),
-    ));
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Form(
+              key: _formKey,
+              onChanged: _validateForm,
+              child: Column(
+          children: [
+            const SizedBox(height: 50)
+            ,TextFormField(
+              controller: _firstNameController,
+              decoration: const InputDecoration(labelText: 'First Name'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your first name';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _lastNameController,
+              decoration: const InputDecoration(labelText: 'Last Name'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your last name';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _userNameController,
+              decoration: const InputDecoration(labelText: 'User Name'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your user name';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _passwordController,
+              decoration: const InputDecoration(labelText: 'Password'),
+              obscureText: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your password';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _passwordConfirmController,
+              decoration: const InputDecoration(labelText: 'Confirm your password'),
+              obscureText: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please confirm your password';
+                }
+                if (value != _passwordController.text) {
+                  return 'Passwords don\'t match';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _birthdayDateController,
+              decoration: const InputDecoration(labelText: 'Birtday Date (yyyy-mm-dd)'), 
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your Birthday Date';
+                }
+                return null;
+              },
+            ),
+            ElevatedButton(
+              onPressed: _isButtonEnabled ? signUp : null,
+              child: const Text('Sign Up'),
+            ),
+          ],
+              ),
+            ),
+        ));
   }
 }
