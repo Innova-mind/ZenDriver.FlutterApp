@@ -18,6 +18,7 @@ class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isButtonEnabled = false;
+  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
@@ -33,10 +34,8 @@ class _SigninScreenState extends State<SigninScreen> {
   }
 
   void navigateToHome(LoginResponse response) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Base(token: response.token)));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => Base(token: response.token)));
   }
 
   void navigateToSignup() {
@@ -75,10 +74,10 @@ class _SigninScreenState extends State<SigninScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(50),
-          child: Form(
+        body: Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(50),
+        child: Form(
           key: _formKey,
           onChanged: _validateForm,
           child: Column(
@@ -91,18 +90,43 @@ class _SigninScreenState extends State<SigninScreen> {
               const SizedBox(height: 50),
               TextFormField(
                 controller: _usernameController,
-                decoration: const InputDecoration(labelText: 'User Name'),
+                decoration: const InputDecoration(
+                  labelText: 'Username',
+                  hintText: 'Username',
+                  prefixIcon: Icon(Icons.person),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your user name';
+                    return 'Please enter your username';
                   }
                   return null;
                 },
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Password'),
-                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  hintText: 'Password',
+                  prefixIcon: const Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    icon: Icon(_isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  ),
+                  border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                ),
+                obscureText: !_isPasswordVisible,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your password';
@@ -110,18 +134,24 @@ class _SigninScreenState extends State<SigninScreen> {
                   return null;
                 },
               ),
-              ElevatedButton(
-                onPressed: _isButtonEnabled ? signIn: null,
-                child: const Text('Sign In'),
-              ),
-              ElevatedButton(
-                onPressed: navigateToSignup,
-                child: const Text('Sign Up'),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: navigateToSignup,
+                    child: const Text('Sign Up'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _isButtonEnabled ? signIn : null,
+                    child: const Text('Sign In'),
+                  ),
+                ],
               ),
             ],
           ),
-            ),
         ),
-      ));
+      ),
+    ));
   }
 }

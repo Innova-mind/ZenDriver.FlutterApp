@@ -14,28 +14,21 @@ class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _passwordConfirmController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _roleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _imageUrlController = TextEditingController();
-  final TextEditingController _birthdayDateController = TextEditingController();
+  final TextEditingController _passwordConfirmController =
+      TextEditingController();
   bool _isButtonEnabled = false;
+  bool _isPasswordVisible = false;
+  bool _isPasswordConfirmVisible = false;
 
   @override
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
-    _userNameController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     _passwordConfirmController.dispose();
-    _phoneController.dispose();
-    _roleController.dispose();
-    _descriptionController.dispose();
-    _imageUrlController.dispose();
-    _birthdayDateController.dispose();
     super.dispose();
   }
 
@@ -47,31 +40,32 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void returnToSignIn(SignupResponse response) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Message'),
-            content: Text(response.message),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Message'),
+          content: Text(response.message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
+
   void signUp() async {
     try {
       User user = User(
         id: 0,
         firstName: _firstNameController.text,
         lastName: _lastNameController.text,
-        userName: _userNameController.text,
+        username: _usernameController.text,
         password: _passwordController.text,
         phone: '-',
         role: '-',
@@ -105,18 +99,31 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Form(
-              key: _formKey,
-              onChanged: _validateForm,
-              child: Column(
+      padding: const EdgeInsets.all(20),
+      child: Form(
+        key: _formKey,
+        onChanged: _validateForm,
+        child: Column(
           children: [
-            const SizedBox(height: 50)
-            ,TextFormField(
+             ClipOval(
+                  child: Image.asset(
+                'assets/logo.png',
+                height: size.height * 0.25,
+              )),
+            const SizedBox(height: 30),
+            TextFormField(
               controller: _firstNameController,
-              decoration: const InputDecoration(labelText: 'First Name'),
+              decoration: const InputDecoration(
+                labelText: 'First Name',
+                hintText: 'Enter your first name',
+                prefixIcon: Icon(Icons.person),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your first name';
@@ -124,9 +131,17 @@ class _SignupScreenState extends State<SignupScreen> {
                 return null;
               },
             ),
+            const SizedBox(height: 20),
             TextFormField(
               controller: _lastNameController,
-              decoration: const InputDecoration(labelText: 'Last Name'),
+              decoration: const InputDecoration(
+                labelText: 'Last Name',
+                hintText: 'Enter your last name',
+                prefixIcon: Icon(Icons.person),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your last name';
@@ -134,20 +149,48 @@ class _SignupScreenState extends State<SignupScreen> {
                 return null;
               },
             ),
+            const SizedBox(height: 20),
             TextFormField(
-              controller: _userNameController,
-              decoration: const InputDecoration(labelText: 'User Name'),
+              controller: _usernameController,
+              decoration: const InputDecoration(
+                labelText: 'username',
+                hintText: 'Enter your username',
+                prefixIcon: Icon(Icons.person),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter your user name';
+                  return 'Please enter your username';
                 }
                 return null;
               },
             ),
+            const SizedBox(height: 20),
             TextFormField(
               controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Password',
+                hintText: 'Enter your password',
+                prefixIcon: const Icon(Icons.lock),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
+                ),
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+              ),
+              obscureText: !_isPasswordVisible,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your password';
@@ -155,10 +198,30 @@ class _SignupScreenState extends State<SignupScreen> {
                 return null;
               },
             ),
+            const SizedBox(height: 20),
             TextFormField(
               controller: _passwordConfirmController,
-              decoration: const InputDecoration(labelText: 'Confirm your password'),
-              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Confirm your password',
+                hintText: 'Confirm your password',
+                prefixIcon: const Icon(Icons.lock),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isPasswordConfirmVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordConfirmVisible = !_isPasswordConfirmVisible;
+                    });
+                  },
+                ),
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+              ),
+              obscureText: !_isPasswordConfirmVisible,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please confirm your password';
@@ -169,23 +232,14 @@ class _SignupScreenState extends State<SignupScreen> {
                 return null;
               },
             ),
-            TextFormField(
-              controller: _birthdayDateController,
-              decoration: const InputDecoration(labelText: 'Birtday Date (yyyy-mm-dd)'), 
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your Birthday Date';
-                }
-                return null;
-              },
-            ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _isButtonEnabled ? signUp : null,
               child: const Text('Sign Up'),
             ),
           ],
-              ),
-            ),
-        ));
+        ),
+      ),
+    ));
   }
 }
