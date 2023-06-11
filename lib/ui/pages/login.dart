@@ -79,6 +79,7 @@ class _SigninScreenState extends State<SigninScreen> {
       onChanged: _validateForm,
       child: Column(
         children: [
+          SizedBox(height: 50),
           TextFormField(
             controller: _usernameController,
             decoration: const InputDecoration(labelText: 'User Name'),

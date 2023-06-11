@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -8,9 +7,6 @@ import 'package:zendriver/models/driver_profile.dart';
 class DriverProfileService{
   final String driverProfilebaseUrl = 'https://zendriver.azurewebsites.net/api/v1/driverprofile';
   
-
-
-
   Future<List<DriverProfile>> getProfiles(licenseType) async{
     final response = await http.get(Uri.parse(driverProfilebaseUrl));
     if(response.statusCode == HttpStatus.ok){

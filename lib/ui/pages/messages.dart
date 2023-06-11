@@ -1,37 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:zendriver/models/message.dart';
+import 'package:zendriver/services/message_service.dart';
 
 class Messages extends StatefulWidget {
   const Messages({Key? key}) : super(key: key);
-
   @override
   State<Messages> createState() => _MessagesState();
 }
 
 class _MessagesState extends State<Messages> with SingleTickerProviderStateMixin {
-  TextEditingController _messageController = TextEditingController();
-  List<String> _messages = [];
+  TextEditingController messageController = TextEditingController();
+  List<Message>? messages;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   late AnimationController _animationController;
   late Tween<Offset> _offsetTween;
 
+  MessageService httpHelper = MessageService();
+
+  Future initialize() async {
+    messages = List.empty();
+    messages = await httpHelper.getMessages();
+    setState(() {
+      messages = messages;
+    });
+  }
+
   @override
   void initState() {
-    super.initState();
+    initialize();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
     _offsetTween = Tween<Offset>(begin: const Offset(1.0, 0.0), end: Offset.zero);
+    super.initState();
   }
 
   void _sendMessage(String message) {
     if (message.isNotEmpty) {
       setState(() {
-        _messages.insert(0, message);
+        //messages.insert(0, message);
         _listKey.currentState?.insertItem(0);
       });
-      _messageController.clear();
+      messageController.clear();
     }
   }
 
@@ -56,7 +67,7 @@ class _MessagesState extends State<Messages> with SingleTickerProviderStateMixin
             child: AnimatedList(
               key: _listKey,
               reverse: true,
-              initialItemCount: _messages.length,
+              initialItemCount: messages!.length,
               itemBuilder: (BuildContext context, int index, Animation<double> animation) {
                 return SlideTransition(
                   position: animation.drive(_offsetTween),
@@ -70,7 +81,7 @@ class _MessagesState extends State<Messages> with SingleTickerProviderStateMixin
                         borderRadius: BorderRadius.circular(16.0),
                       ),
                       child: Text(
-                        _messages[index],
+                        messages![index].content,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16.0,
@@ -89,7 +100,7 @@ class _MessagesState extends State<Messages> with SingleTickerProviderStateMixin
               children: [
                 Expanded(
                   child: TextField(
-                    controller: _messageController,
+                    controller: messageController,
                     onSubmitted: _sendMessage, // Llama a _sendMessage al presionar Enter
                     decoration: const InputDecoration(
                       hintText: 'Escribe un mensaje...',
@@ -99,7 +110,7 @@ class _MessagesState extends State<Messages> with SingleTickerProviderStateMixin
                 ),
                 IconButton(
                   icon: const Icon(Icons.send),
-                  onPressed: () => _sendMessage(_messageController.text.trim()), // Llama a _sendMessage al presionar el botón de enviar
+                  onPressed: () => _sendMessage(messageController.text.trim()), // Llama a _sendMessage al presionar el botón de enviar
                 ),
               ],
             ),
