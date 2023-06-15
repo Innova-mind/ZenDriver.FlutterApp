@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import '../models/user.dart';
 class LoginService {
   final String baseUrl = 'https://zendriver.azurewebsites.net/api/v1/users/';
-  //final String baseUrl = 'http://192.168.1.16/api/v1/users/';
+  //final String baseUrl = 'http://192.168.1.2/api/v1/users/';
 
   Future<LoginResponse> login(String name, String password) async {
     final url = '${baseUrl}sign-in';

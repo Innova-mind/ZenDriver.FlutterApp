@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'login.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -8,9 +11,11 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  Future<SharedPreferences>? _prefs;
   
   @override
   void initState() {
+    _prefs = SharedPreferences.getInstance();
     super.initState();
   }
 
@@ -19,10 +24,22 @@ class _ProfileState extends State<Profile> {
     super.dispose();
   }
 
+  void signOut() async {
+    final pref = await _prefs;
+    pref?.clear();
+    navigateToLogin();
+  }
+
+  void navigateToLogin() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const SigninScreen()),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -57,6 +74,11 @@ class _ProfileState extends State<Profile> {
           buildTextField('Facebook', '@Maconsa'),
           buildTextField('Instagram', '@Maconsa'),
           buildTextField('Twitter', '@Maconsa'),
+          const SizedBox(height: 16.0),
+          ElevatedButton(
+            onPressed: signOut,
+            child: const Text('Sign Out'),
+          ),
         ],
       ),
     );
