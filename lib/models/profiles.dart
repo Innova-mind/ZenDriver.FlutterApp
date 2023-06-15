@@ -1,4 +1,17 @@
 class Profiles {
+  int id;
+  User user;
+  String startingYear;
+
+  Profiles({required this.id, required this.user, required this.startingYear});
+
+  Profiles.fromJson(Map<String, dynamic> json):
+      id = json['id'],
+      user = User.fromJson(json['user']),
+      startingYear= json['startingYear'];
+}
+
+class User {
   final int id;
   final String firstName;
   final String lastName;
@@ -10,7 +23,7 @@ class Profiles {
   final String imageUrl;
   final String birthdayDate;
 
-  Profiles({
+  User({
     required this.id,
     required this.firstName,
     required this.lastName,
@@ -23,33 +36,18 @@ class Profiles {
     required this.birthdayDate,
   });
 
-  Profiles.fromJson(Map<String, dynamic> json)
-      : this(id : json['id'],
-        firstName : json['firstName'],
-        lastName : json['lastName'],
-        userName : json['userName'],
-        password : json['password'],
-        phone : json['phone'],
-        role : json['role'],
-        description : json['description'],
-        imageUrl : json['imageUrl'],
-        birthdayDate : json['birthdayDate']);
-
-        
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'firstName': firstName,
-      'lastName': lastName,
-      'userName': userName,
-      'password': password,
-      'phone': phone,
-      'role': role,
-      'description': description,
-      'imageUrl': imageUrl,
-      'birthdayDate': birthdayDate,
-    };
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      userName: json['userName'],
+      password: json['password'],
+      phone: json['phone'],
+      role: json['role'],
+      description: json['description'],
+      imageUrl: json['imageUrl'],
+      birthdayDate: json['birthdayDate'],
+    );
   }
-
-
 }

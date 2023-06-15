@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zendriver/ui/pages/login.dart';
-import 'package:zendriver/ui/pages/profile.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
@@ -26,7 +25,7 @@ class _MainAppState extends State<MainApp> {
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
-      home: const Profile(),
+      home: const SigninScreen()
     );
     
   }

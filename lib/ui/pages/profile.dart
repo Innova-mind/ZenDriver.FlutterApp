@@ -4,36 +4,40 @@ import 'package:zendriver/services/profile_service.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
-  
-
-  @override 
+  @override
   State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-  List<Profiles>? profiles;
-  ProfileService httpHelper = ProfileService();
+  Profiles? profiles;
+  ProfileService? profileService;
+  bool isLoading = true;
 
-  Future initialize() async{
-    profiles = List.empty();
-    profiles = await httpHelper.getUserById(1);
-    setState(() {
-      profiles= profiles;
-    });
+  Future initialize() async {
+    try {
+      profiles = await profileService?.getUser(3);
+      setState(() {
+        isLoading = false;
+      });
+    } catch (error) {
+      print('Error: $error');
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
-
 
   @override
   void initState() {
+    profileService = ProfileService();
     initialize();
     super.initState();
   }
 
- 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(   
+      body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -43,14 +47,14 @@ class _ProfileState extends State<Profile> {
                 alignment: Alignment.center,
                 child: CircleAvatar(
                   radius: 50.0,
-                  backgroundImage: NetworkImage('https://www.ccair.org/wp-content/plugins/phastpress/phast.php/c2Vydm/ljZT1pbWFnZXMmc3JjPWh0dHBzJTNBJTJGJTJGd3d3LmNjYWlyLm9yZyUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAxNSUyRjA0JTJGd2FsbHBhcGVyLWZvci1mYWNlYm9vay1wcm9maWxlLXBob3RvLWUxNDQwNjI0NTA1NTc0LmpwZyZjYWNoZU1hcmtlcj0xNTE3MTc3MDkwLTE2OTc4JnRva2VuPTY4NDIyY2YwN2Q4ODAxZmM.q.jpg')
+                  backgroundImage: NetworkImage('https://www.ccair.org/wp-content/plugins/phastpress/phast.php/c2Vydm/ljZT1pbWFnZXMmc3JjPWh0dHBzJTNBJTJGJTJGd3d3LmNjYWlyLm9yZyUyRndwLWNvbnRlbnQlMkZ1cGxvYWRzJTJGMjAxNSUyRjA0JTJGd2FsbHBhcGVyLWZvci1mYWNlYm9vay1wcm9maWxlLXBob3RvLWUxNDQwNjI0NTA1NTc0LmpwZyZjYWNoZU1hcmtlcj0xNTE3MTc3MDkwLTE2OTc4JnRva2VuPTY4NDIyY2YwN2Q4ODAxZmM.q.jpg'),
                 ),
               ),
               const SizedBox(height: 16.0),
-              const Center(
+              Center(
                 child: Text(
-                  'Henry Turrones',
-                  style: TextStyle(
+                  '${profiles?.user.firstName} ${profiles?.user.lastName}',
+                  style: const TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
                   ),
@@ -64,26 +68,18 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              
-              buildTextField('Email', '2'),
-              buildTextField('Phone', '+51 994 398 312'),
+              buildTextField('Email', 'test@gmail.com'),
+              buildTextField('Phone', '${profiles?.user.phone}'),
               buildTextField('Address', 'Lima, Lince'),
-              buildTextField('Facebook', '@Maconsa'),
-              buildTextField('Instagram', '@Maconsa'),
-              buildTextField('Twitter', '@Maconsa'),
+              buildTextField('Role', '${profiles?.user.role}'),
+              buildTextField('BrithdayDate', '${profiles?.user.birthdayDate}'),
+              buildTextField('StartingYear', '${profiles?.startingYear}'),
             ],
           ),
         ),
       ),
     );
   }
-
-  @override
-  void dispose() {
-    initialize();
-    super.dispose();
-  }
-
 }
 
 @override
@@ -113,6 +109,4 @@ Widget buildTextField(String labelText, String placeHolder) {
                       ))))
         ],
       ));
-      
 }
-
