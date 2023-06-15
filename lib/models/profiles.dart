@@ -1,4 +1,4 @@
-class Profile {
+class Profiles {
   final int id;
   final String firstName;
   final String lastName;
@@ -10,7 +10,7 @@ class Profile {
   final String imageUrl;
   final String birthdayDate;
 
-  Profile({
+  Profiles({
     required this.id,
     required this.firstName,
     required this.lastName,
@@ -23,17 +23,17 @@ class Profile {
     required this.birthdayDate,
   });
 
-  Profile.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        firstName = json['firstName'],
-        lastName = json['lastName'],
-        userName = json['userName'],
-        password = json['password'],
-        phone = json['phone'],
-        role = json['role'],
-        description = json['description'],
-        imageUrl = json['imageUrl'],
-        birthdayDate = json['birthdayDate'];
+  Profiles.fromJson(Map<String, dynamic> json)
+      : this(id : json['id'],
+        firstName : json['firstName'],
+        lastName : json['lastName'],
+        userName : json['userName'],
+        password : json['password'],
+        phone : json['phone'],
+        role : json['role'],
+        description : json['description'],
+        imageUrl : json['imageUrl'],
+        birthdayDate : json['birthdayDate']);
 
         
   Map<String, dynamic> toJson() {

@@ -1,27 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:zendriver/models/profiles.dart';
+import 'package:zendriver/services/profile_service.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
+  
 
-  @override
+  @override 
   State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
+  List<Profiles>? profiles;
+  ProfileService httpHelper = ProfileService();
+
+  Future initialize() async{
+    profiles = List.empty();
+    profiles = await httpHelper.getUserById(1);
+    setState(() {
+      profiles= profiles;
+    });
+  }
+
+
   @override
   void initState() {
+    initialize();
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: SingleChildScrollView(   
         child: Container(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -52,7 +64,8 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              buildTextField('Email', 'erick@gmail.com'),
+              
+              buildTextField('Email', '2'),
               buildTextField('Phone', '+51 994 398 312'),
               buildTextField('Address', 'Lima, Lince'),
               buildTextField('Facebook', '@Maconsa'),
@@ -64,6 +77,13 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    initialize();
+    super.dispose();
+  }
+
 }
 
 @override
@@ -93,4 +113,6 @@ Widget buildTextField(String labelText, String placeHolder) {
                       ))))
         ],
       ));
+      
 }
+
