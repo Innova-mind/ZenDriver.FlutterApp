@@ -25,6 +25,15 @@ class MessageService {
       throw Exception('Failed to load messages');
     }
   }
+    Future<List<Message>> searchLastMessagesByUserId(int userId) async {
+    final response = await http.get(Uri.parse('$_baseUrl/search-last-messages-receiver-id/$userId'));
+    if(response.statusCode == HttpStatus.ok){
+      final messages = json.decode(response.body).cast<Map<String, dynamic>>();
+      return messages.map<Message>((json) => Message.fromJson(json)).toList();
+    }else{
+      throw Exception('Failed to load messages');
+    }
+  }
   Future<List<Message>> searchByEmitterIdAndReceiverId(int emitterId, int receiverId) async {
     final response = await http.get(Uri.parse('$_baseUrl/search-by-emitter-receiver/$emitterId/$receiverId'));
     if(response.statusCode == HttpStatus.ok){

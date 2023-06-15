@@ -25,7 +25,7 @@ class _MessageListState extends State<MessageList> {
 
   Future initialize() async {
     messages = List.empty();
-    messages = await httpHelper.searchByEmitterId(2);
+    messages = await httpHelper.searchLastMessagesByUserId(2);
     setState(() {
       messages = messages;
     });
