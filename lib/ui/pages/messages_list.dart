@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/message.dart';
 import '../../services/message_service.dart';
 import 'messages.dart';
 
 String formatDate(DateTime fecha) {
+  //fecha - 5 horas
+  fecha = fecha.subtract(const Duration(hours: 5));
   String hora = fecha.hour.toString().padLeft(2, '0');
   String minutos = fecha.minute.toString().padLeft(2, '0');
   String periodo = fecha.hour < 12 ? 'AM' : 'PM';
-  
+
   return '$hora:$minutos $periodo';
 }
-
 
 class MessageList extends StatefulWidget {
   const MessageList({Key? key}) : super(key: key);
@@ -22,10 +24,13 @@ class MessageList extends StatefulWidget {
 class _MessageListState extends State<MessageList> {
   List<Message>? messages;
   MessageService httpHelper = MessageService();
+  int? userId = 0;
 
   Future initialize() async {
     messages = List.empty();
-    messages = await httpHelper.searchLastMessagesByUserId(2);
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getInt('userId');
+    messages = await httpHelper.searchLastMessagesByUserId(userId ?? 0);
     setState(() {
       messages = messages;
     });
@@ -46,7 +51,6 @@ class _MessageListState extends State<MessageList> {
       body: ListView.builder(
         itemCount: messages!.length,
         itemBuilder: (BuildContext context, int index) {
-          final messageHeader = messages![index];
           return Container(
             decoration: const BoxDecoration(
                 border: Border(
@@ -64,10 +68,13 @@ class _MessageListState extends State<MessageList> {
             margin: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(messages![index].emitter.imageUrl),
+                backgroundImage:
+                    NetworkImage(
+                      messages![index].emitter.id != userId ? messages![index].emitter.imageUrl : messages![index].receiver.imageUrl),
               ),
               title: Text(
-                messages![index].emitter.firstName + ' ' + messages![index].emitter.lastName,
+               messages![index].emitter.id != userId ? ('${messages![index].emitter.firstName} ${messages![index].emitter.lastName}') : 
+               ('${messages![index].receiver.firstName} ${messages![index].receiver.lastName}'),
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: Column(
@@ -84,7 +91,9 @@ class _MessageListState extends State<MessageList> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Messages(),
+                    builder: (context) => Messages( 
+                      emitterId: messages![index].emitter.id == userId ? messages![index].receiver.id : messages![index].emitter.id,
+                      receiverId: messages![index].receiver.id == userId ? messages![index].receiver.id : messages![index].emitter.id),
                   ),
                 );
               },

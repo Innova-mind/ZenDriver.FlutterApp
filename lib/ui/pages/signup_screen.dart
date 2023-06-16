@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 import '../../models/user.dart';
 import '../../services/login_service.dart';
 
+String _twoDigits(int n) {
+  if (n >= 10) {
+    return "$n";
+  }
+  return "0$n";
+}
+
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -60,6 +67,9 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void signUp() async {
+    DateTime now = DateTime.now();
+    String formattedDate =
+        '${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)}';
     try {
       User user = User(
         id: 0,
@@ -70,8 +80,8 @@ class _SignupScreenState extends State<SignupScreen> {
         phone: '-',
         role: '-',
         description: '-',
-        imageUrl: '-',
-        birthdayDate: '-',
+        imageUrl: 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg',
+        birthdayDate: formattedDate,
       );
       SignupResponse? response = await httpHelper.signUp(user);
       returnToSignIn(response);
@@ -108,11 +118,11 @@ class _SignupScreenState extends State<SignupScreen> {
         onChanged: _validateForm,
         child: Column(
           children: [
-             ClipOval(
-                  child: Image.asset(
-                'assets/logo.png',
-                height: size.height * 0.25,
-              )),
+            ClipOval(
+                child: Image.asset(
+              'assets/logo.png',
+              height: size.height * 0.25,
+            )),
             const SizedBox(height: 30),
             TextFormField(
               controller: _firstNameController,
