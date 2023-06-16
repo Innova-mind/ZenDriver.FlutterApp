@@ -30,9 +30,10 @@ class _MessagesState extends State<Messages>
 
   Future initialize() async {
     emitter = await loginService.getUserById(widget.emitterId);
-    messages = await httpHelper.searchByEmitterIdAndReceiverId(widget.emitterId, widget.receiverId);
+    List<Message> fetchedMessages = await httpHelper
+        .searchByEmitterIdAndReceiverId(widget.emitterId, widget.receiverId);
     setState(() {
-      messages = messages;
+      messages = fetchedMessages;
       emitter = emitter;
     });
   }
@@ -49,11 +50,18 @@ class _MessagesState extends State<Messages>
     super.initState();
   }
 
-  void _sendMessage(String message) {
+  void _sendMessage(String message) async {
     if (message.isNotEmpty) {
+      SaveMessageRequest messageRequest = SaveMessageRequest(
+        emitterId: widget.receiverId,
+        receiverId: widget.emitterId,
+        content: message,
+      );
+      await httpHelper.addMessage(messageRequest);
+      List<Message> fetchedMessages = await httpHelper
+          .searchByEmitterIdAndReceiverId(widget.emitterId, widget.receiverId);
       setState(() {
-        //messages.insert(0, message);
-        _listKey.currentState?.insertItem(0);
+        messages = fetchedMessages;
       });
       messageController.clear();
     }
@@ -66,10 +74,14 @@ class _MessagesState extends State<Messages>
         title: Row(
           children: [
             CircleAvatar(
-              backgroundImage: NetworkImage(emitter == null ? 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg' : emitter!.imageUrl),
+              backgroundImage: NetworkImage(emitter == null
+                  ? 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg'
+                  : emitter!.imageUrl),
             ),
             const SizedBox(width: 8),
-            Text(emitter == null ? '' :'${emitter!.firstName} ${emitter!.lastName}'),
+            Text(emitter == null
+                ? ''
+                : '${emitter!.firstName} ${emitter!.lastName}'),
           ],
         ),
       ),
@@ -77,24 +89,29 @@ class _MessagesState extends State<Messages>
         children: [
           Expanded(
             child: AnimatedList(
-              key: _listKey,
+              key: messages == null ? null : _listKey,
               reverse: true,
               initialItemCount: messages?.length ?? 0,
               itemBuilder: (BuildContext context, int index,
                   Animation<double> animation) {
+                final message = messages![index];
+                final isCurrentUser = message.emitter.id == widget.receiverId;
+
                 return SlideTransition(
                   position: animation.drive(_offsetTween),
                   child: Align(
-                    alignment: Alignment.centerRight,
+                    alignment: isCurrentUser
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: Container(
                       margin: const EdgeInsets.all(8.0),
                       padding: const EdgeInsets.all(12.0),
                       decoration: BoxDecoration(
-                        color: Colors.blue,
+                        color: isCurrentUser ? Colors.blue : const Color.fromARGB(255, 59, 141, 63),
                         borderRadius: BorderRadius.circular(16.0),
                       ),
                       child: Text(
-                        messages![index].content,
+                        message.content,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16.0,

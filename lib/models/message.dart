@@ -1,5 +1,6 @@
 import 'package:zendriver/models/user.dart';
 
+
 class Message {
   final int id;
   final String content;
@@ -31,6 +32,25 @@ class Message {
       'receiverId': receiver.id,
       'receiver': receiver.toJson(),
       'createdAt': createdAt.toString(),
+    };
+  }
+}
+class SaveMessageRequest {
+  final String content;
+  final int emitterId;
+  final int receiverId;
+
+  SaveMessageRequest({
+    required this.content,
+    required this.emitterId,
+    required this.receiverId,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'content': content,
+      'emitterId': emitterId,
+      'receiverId': receiverId,
     };
   }
 }
