@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/driver_profile.dart';
+import 'messages.dart';
 
 class DriverProfileScreen extends StatefulWidget {
   const DriverProfileScreen({super.key, required this.driverProfile});
@@ -11,8 +13,10 @@ class DriverProfileScreen extends StatefulWidget {
 
 class _DriverProfileScreenState extends State<DriverProfileScreen> {
   num experienceYears = 0;
-
-  void initialize() {
+  int userId = 0;
+  void initialize() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getInt('userId')!;
     final currentYear = DateTime.now().year;
     final experienceYear =
         num.tryParse(widget.driverProfile.driver.experienceYears ?? '0');
@@ -194,7 +198,16 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             ),
             const SizedBox(height: 140),
             TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Messages(
+                          emitterId: widget.driverProfile.driver.user!.id,
+                          receiverId: userId,
+                        ),
+                      ));
+                },
                 child: Text(
                     "Enviar mensaje a ${widget.driverProfile.driver.user!.firstName} ${widget.driverProfile.driver.user!.lastName}")),
           ],

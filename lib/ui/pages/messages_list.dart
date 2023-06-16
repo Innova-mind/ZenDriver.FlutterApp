@@ -41,6 +41,10 @@ class _MessageListState extends State<MessageList> {
     initialize();
     super.initState();
   }
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
