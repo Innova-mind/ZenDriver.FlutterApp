@@ -88,9 +88,11 @@ class _SearchYourDriverState extends State<SearchYourDriver> {
             height: 20,
           ),
           Container(
-            width: 350,
+            width: 150,
             child: DropdownButtonFormField(
+                
                 decoration: const InputDecoration(
+                  
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     labelText: 'Tipo de licencia'),
