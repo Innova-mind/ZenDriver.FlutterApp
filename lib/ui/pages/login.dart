@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zendriver/ui/pages/signup_screen.dart';
 import 'package:zendriver/ui/shared/base.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/user.dart';
 import '../../services/login_service.dart';
@@ -19,7 +20,14 @@ class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isButtonEnabled = false;
   bool _isPasswordVisible = false;
+  Future<SharedPreferences>? _prefs;
 
+  @override
+  void initState() {
+    _prefs = SharedPreferences.getInstance();
+    _getToken();
+    super.initState();
+  }
   @override
   void dispose() {
     _usernameController.dispose();
@@ -33,9 +41,26 @@ class _SigninScreenState extends State<SigninScreen> {
     });
   }
 
-  void navigateToHome(LoginResponse response) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => Base(token: response.token)));
+  void _saveTokenAndUserId(LoginResponse data) async {
+    final pref = await _prefs;
+    pref?.setString('token', data.token);
+    pref?.setString('id', data.id);
+  }
+
+  void _getToken() async {
+    final pref = await _prefs;
+    String? token = pref?.getString('token');
+    if (token != null) {
+      navigateToHome();
+    }
+  }
+
+
+  void navigateToHome() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const Base()),
+    );
   }
 
   void navigateToSignup() {
@@ -47,7 +72,8 @@ class _SigninScreenState extends State<SigninScreen> {
     try {
       LoginResponse? response = await httpHelper.login(
           _usernameController.text, _passwordController.text);
-      navigateToHome(response);
+      _saveTokenAndUserId(response);
+      navigateToHome();
     } catch (e) {
       String message = e.toString().split(':')[1].trim();
       showDialog(

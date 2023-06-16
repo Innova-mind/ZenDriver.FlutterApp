@@ -4,8 +4,7 @@ import 'package:zendriver/ui/shared/routes.dart';
 import 'bottom_nav.dart';
 
 class Base extends StatefulWidget {
-  const Base({super.key, required this.token});
-  final String token;
+  const Base({super.key});
 
   @override
   State<Base> createState() => _BaseState();
@@ -29,8 +28,11 @@ class _BaseState extends State<Base> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Routes(index: index,),
+        body: Routes(
+          index: index,
+        ),
         bottomNavigationBar: bottomNav,
-      ),);
+      ),
+    );
   }
 }

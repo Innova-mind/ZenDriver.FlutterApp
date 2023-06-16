@@ -4,9 +4,7 @@ import 'package:zendriver/ui/pages/login.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.lightBlue
-    ),
+    const SystemUiOverlayStyle(systemNavigationBarColor: Colors.lightBlue),
   );
   runApp(const MainApp());
 }
@@ -27,7 +25,8 @@ class _MainAppState extends State<MainApp> {
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
-      home: const SigninScreen(),
+      home: const SigninScreen()
     );
+    
   }
 }
