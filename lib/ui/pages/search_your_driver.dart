@@ -10,8 +10,11 @@ class SearchYourDriver extends StatefulWidget {
 
 class _SearchYourDriverState extends State<SearchYourDriver> {
   final _licenseList = ["AI", "AIIA", "AIIB", "AIIIB", "AIIIA", "AIIIC"];
-  String? selectedlicense = "AI";
 
+  
+  String? selectedlicense = "AI";
+  final TextEditingController _ageController = TextEditingController();
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,23 +62,14 @@ class _SearchYourDriverState extends State<SearchYourDriver> {
           ),
           Container(
             width: 350,
-            child: const TextField(
-              decoration: InputDecoration(
+            child: TextFormField(
+              controller: _ageController
+              ,
+              decoration: const InputDecoration(
+                  label: Text('Edad'),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10))),
                   hintText: 'Edad'),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
-            width: 350,
-            child: const TextField(
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  hintText: 'Departamento'),
             ),
           ),
           const SizedBox(
@@ -117,6 +111,7 @@ class _SearchYourDriverState extends State<SearchYourDriver> {
           const SizedBox(
             height: 20,
           ),
+          
           ButtonBar(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -128,7 +123,7 @@ class _SearchYourDriverState extends State<SearchYourDriver> {
                   onPressed: () {
                     Navigator.push(context,
                     
-                    MaterialPageRoute(builder: (context) => const FilteredDrivers()));
+                    MaterialPageRoute(builder: (context) => FilteredDrivers(licenseType: selectedlicense!)));
                   },
                   child: const Text(
                     'Filtrar ya',

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:zendriver/ui/shared/bottom_nav.dart';
-import 'package:zendriver/ui/shared/routes.dart';
+import 'package:zendriver/ui/pages/login.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.lightBlue
-    ),
+    const SystemUiOverlayStyle(systemNavigationBarColor: Colors.lightBlue),
   );
   runApp(const MainApp());
 }
@@ -20,25 +17,16 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  int index = 0;
-  BottomNav ?bottomNav;
-  @override
-  void initState() {
-    bottomNav = BottomNav(currentIndex: (i){
-      setState(() {
-        index = i;
-      });
-    });
-    super.initState();
-  }
   @override
   Widget build(BuildContext context) {
-    
     return MaterialApp(
-      home: Scaffold(
-        body: Routes(index: index,),
-        bottomNavigationBar: bottomNav,
+      title: 'ZenDriver',   
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        useMaterial3: true,
       ),
+      home: const SigninScreen()
     );
+    
   }
 }
