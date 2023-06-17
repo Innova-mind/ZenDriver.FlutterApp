@@ -200,13 +200,14 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             TextButton(
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Messages(
-                          emitterId: widget.driverProfile.driver.user!.id,
-                          receiverId: userId,
-                        ),
-                      ));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Messages(
+                        emitterId: widget.driverProfile.driver.user!.id,
+                        receiverId: userId,
+                      ),
+                    )
+                  );
                 },
                 child: Text(
                     "Enviar mensaje a ${widget.driverProfile.driver.user!.firstName} ${widget.driverProfile.driver.user!.lastName}")),

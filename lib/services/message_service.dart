@@ -58,14 +58,14 @@ class MessageService {
     }
   }
 
-  Future<SaveMessageRequest> addMessage(SaveMessageRequest message) async {
+  Future<Message> addMessage(SaveMessageRequest message) async {
     final response = await http.post(Uri.parse('$_baseUrl/add-message'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: json.encode(message.toJson()));
     if (response.statusCode == HttpStatus.ok) {
-      return message;
+      return Message.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to create message.');
     }

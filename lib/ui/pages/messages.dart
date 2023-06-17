@@ -47,6 +47,7 @@ class _MessagesState extends State<Messages>
     );
     _offsetTween =
         Tween<Offset>(begin: const Offset(1.0, 0.0), end: Offset.zero);
+    _animationController.forward(); // Inicia la animación
     super.initState();
   }
 
@@ -57,12 +58,23 @@ class _MessagesState extends State<Messages>
         receiverId: widget.emitterId,
         content: message,
       );
-      await httpHelper.addMessage(messageRequest);
-      List<Message> fetchedMessages = await httpHelper
+
+      await httpHelper.addMessage(messageRequest).then((value) {
+        // newMessage = Message(
+        //   id: value.id,
+        //   emitter: value.emitter,
+        //   receiver: value.receiver,
+        //   content: value.content,
+        //   createdAt: value.createdAt,
+        // );
+      });
+      final messages2 = await httpHelper
           .searchByEmitterIdAndReceiverId(widget.emitterId, widget.receiverId);
       setState(() {
-        messages = fetchedMessages;
+        messages = messages2;
       });
+    
+
       messageController.clear();
     }
   }
@@ -74,9 +86,11 @@ class _MessagesState extends State<Messages>
         title: Row(
           children: [
             CircleAvatar(
-              backgroundImage: NetworkImage(emitter == null
-                  ? 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg'
-                  : emitter!.imageUrl),
+              backgroundImage: NetworkImage(
+                emitter == null
+                    ? 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg'
+                    : emitter!.imageUrl,
+              ),
             ),
             const SizedBox(width: 8),
             Text(emitter == null
@@ -104,11 +118,27 @@ class _MessagesState extends State<Messages>
                         ? Alignment.centerRight
                         : Alignment.centerLeft,
                     child: Container(
-                      margin: const EdgeInsets.all(8.0),
-                      padding: const EdgeInsets.all(12.0),
+                      margin: const EdgeInsets.only(
+                        top: 4.0,
+                        bottom: 4.0,
+                        left: 8.0,
+                        right: 8.0,
+                      ),
+                      padding: const EdgeInsets.all(8.0),
                       decoration: BoxDecoration(
-                        color: isCurrentUser ? Colors.blue : const Color.fromARGB(255, 59, 141, 63),
-                        borderRadius: BorderRadius.circular(16.0),
+                        color: isCurrentUser
+                            ? Colors.blue
+                            : const Color.fromARGB(255, 59, 141, 63),
+                        borderRadius: BorderRadius.only(
+                          topLeft: isCurrentUser
+                              ? const Radius.circular(10.0)
+                              : const Radius.circular(0.0),
+                          topRight: isCurrentUser
+                              ? const Radius.circular(0.0)
+                              : const Radius.circular(10.0),
+                          bottomLeft: const Radius.circular(10.0),
+                          bottomRight: const Radius.circular(10.0),
+                        ),
                       ),
                       child: Text(
                         message.content,
@@ -126,13 +156,16 @@ class _MessagesState extends State<Messages>
           Container(
             color: Colors.grey[200],
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            margin: const EdgeInsets.only(
+              top: 4.0,
+            ),
             child: Row(
               children: [
                 Expanded(
                   child: TextField(
                     controller: messageController,
                     onSubmitted:
-                        _sendMessage, // Llama a _sendMessage al presionar Enter
+                        _sendMessage, 
                     decoration: const InputDecoration(
                       hintText: 'Escribe un mensaje...',
                       border: InputBorder.none,
@@ -142,7 +175,7 @@ class _MessagesState extends State<Messages>
                 IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () => _sendMessage(messageController.text
-                      .trim()), // Llama a _sendMessage al presionar el botón de enviar
+                      .trim()),
                 ),
               ],
             ),

@@ -91,15 +91,17 @@ class _MessageListState extends State<MessageList> {
                 ],
               ),
               trailing: Text(formatDate(messages![index].createdAt)),
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => Messages( 
                       emitterId: messages![index].emitter.id == userId ? messages![index].receiver.id : messages![index].emitter.id,
                       receiverId: messages![index].receiver.id == userId ? messages![index].receiver.id : messages![index].emitter.id),
                   ),
-                );
+                ).then((_) {
+                  initialize();
+                });
               },
             ),
           );
