@@ -59,19 +59,12 @@ class _MessagesState extends State<Messages>
         content: message,
       );
 
-      await httpHelper.addMessage(messageRequest).then((value) {
-        // newMessage = Message(
-        //   id: value.id,
-        //   emitter: value.emitter,
-        //   receiver: value.receiver,
-        //   content: value.content,
-        //   createdAt: value.createdAt,
-        // );
-      });
+      await httpHelper.addMessage(messageRequest);
       final messages2 = await httpHelper
           .searchByEmitterIdAndReceiverId(widget.emitterId, widget.receiverId);
       setState(() {
         messages = messages2;
+        _listKey.currentState!.insertItem(0); 
       });
     
 
