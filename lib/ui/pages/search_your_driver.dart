@@ -11,15 +11,14 @@ class SearchYourDriver extends StatefulWidget {
 class _SearchYourDriverState extends State<SearchYourDriver> {
   final _licenseList = ["AI", "AIIA", "AIIB", "AIIIB", "AIIIA", "AIIIC"];
 
-  
   String? selectedlicense = "AI";
-  final TextEditingController _ageController = TextEditingController();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           const SizedBox(
             height: 65,
@@ -43,56 +42,14 @@ class _SearchYourDriverState extends State<SearchYourDriver> {
               ),
             ],
           ),
-          const SizedBox(
-            height: 50,
-          ),
-          Container(
-            width: 350,
-            child: const TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                hintText: 'Años de experiencia',
-              ),
-            ),
-          ),
+         
           const SizedBox(
             height: 20,
           ),
-          Container(
-            width: 350,
-            child: TextFormField(
-              controller: _ageController
-              ,
-              decoration: const InputDecoration(
-                  label: Text('Edad'),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  hintText: 'Edad'),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
-            width: 350,
-            child: const TextField(
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  hintText: 'Grado de estudios'),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
+          SizedBox(
             width: 150,
             child: DropdownButtonFormField(
-                
                 decoration: const InputDecoration(
-                  
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     labelText: 'Tipo de licencia'),
@@ -113,7 +70,22 @@ class _SearchYourDriverState extends State<SearchYourDriver> {
           const SizedBox(
             height: 20,
           ),
-          
+           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(100, 50),
+                    backgroundColor: const Color.fromRGBO(0, 150, 136, 1),
+                  ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => FilteredDrivers(
+                            licenseType: selectedlicense!,
+                            operation: 1,
+                            title: "Conductores")));
+              },
+              child: const Text("Mostrar Todos los conductores")),
+
           ButtonBar(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -123,9 +95,14 @@ class _SearchYourDriverState extends State<SearchYourDriver> {
                     backgroundColor: const Color.fromRGBO(0, 150, 136, 1),
                   ),
                   onPressed: () {
-                    Navigator.push(context,
-                    
-                    MaterialPageRoute(builder: (context) => FilteredDrivers(licenseType: selectedlicense!)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FilteredDrivers(
+                                licenseType: selectedlicense!,
+                                operation: 0,
+                                title:
+                                    "Conductores con licencia $selectedlicense")));
                   },
                   child: const Text(
                     'Filtrar ya',

@@ -4,8 +4,10 @@ import 'package:zendriver/services/driver_profile_service.dart';
 import 'package:zendriver/ui/pages/filtered_driver_item.dart';
 
 class FilteredDrivers extends StatefulWidget {
-  const FilteredDrivers({Key? key, required this.licenseType}) : super(key: key);
+  const FilteredDrivers({Key? key, required this.licenseType, required this.operation, required this.title}) : super(key: key);
   final String licenseType;
+  final int operation;
+  final String title;
 
   @override
   State<FilteredDrivers> createState() => _FilteredDriversState();
@@ -17,7 +19,12 @@ class _FilteredDriversState extends State<FilteredDrivers> {
 
   Future initialize() async {
     profiles = List.empty();
-    profiles = await httpHelper.getProfiles(widget.licenseType);
+    if(widget.operation == 0){
+     profiles = await httpHelper.getProfiles(widget.licenseType);
+    }
+    else if (widget.operation == 1){
+      profiles = await httpHelper.getAllProfiles();
+    }
     setState(() {
       profiles = profiles;
     });
@@ -33,7 +40,7 @@ class _FilteredDriversState extends State<FilteredDrivers> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Conductores filtrados'),
+        title:  Text(widget.title),
       ),
       body: CustomScrollView(
         slivers: [
