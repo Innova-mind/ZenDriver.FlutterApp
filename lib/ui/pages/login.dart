@@ -54,7 +54,7 @@ class _SigninScreenState extends State<SigninScreen> {
       navigateToHome();
     }
   }
-
+  
 
   void navigateToHome() {
     Navigator.pushReplacement(

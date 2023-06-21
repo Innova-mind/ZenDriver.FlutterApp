@@ -6,7 +6,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Instagram',
+      title: 'Flutter Zendriver',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -20,7 +20,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Instagram'),
+        title: Text('Zendriver'),
       ),
       body: ListView(
         children: <Widget>[
