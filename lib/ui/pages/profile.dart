@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zendriver/models/profiles.dart';
 import 'package:zendriver/services/profile_service.dart';
+import 'login.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -44,7 +45,19 @@ class _ProfileState extends State<Profile> {
   void dispose() {
     super.dispose();
   }
- 
+
+  void signOut() async {
+    final pref = await _prefs;
+    pref?.clear();
+    navigateToLogin();
+  }
+
+  void navigateToLogin() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const SigninScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +105,11 @@ class _ProfileState extends State<Profile> {
               buildTextField('Address', 'Lima'),
               buildTextField('Role', '${user?.role}'),
               buildTextField('BrithdayDate', '${user?.birthdayDate}'),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: signOut,
+                child: const Text('Sign Out'),
+              ),
             ],
           ),
         ),
