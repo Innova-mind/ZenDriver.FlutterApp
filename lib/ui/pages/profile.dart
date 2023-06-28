@@ -19,13 +19,14 @@ class _ProfileState extends State<Profile> {
   int? userId;
 
   initialize() async {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      userId = prefs.getInt('userId');
-      user = await profileService?.getData(userId!);
-      setState(() {
-        user = user;
-      });
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getInt('userId');
+    user = await profileService?.getData(userId!);
+    setState(() {
+      user = user;
+    });
   }
+
   @override
   void initState() {
     _prefs = SharedPreferences.getInstance();
@@ -40,7 +41,7 @@ class _ProfileState extends State<Profile> {
     tuken = pref?.getString('token');
     id = pref?.getString('id');
   }
-  
+
   @override
   void dispose() {
     super.dispose();
@@ -76,8 +77,9 @@ class _ProfileState extends State<Profile> {
                   radius: 50.0,
                   backgroundImage: NetworkImage(
                     user == null
-                    ? 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg'
-                    : user!.imageUrl,),
+                        ? 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg'
+                        : user!.imageUrl,
+                  ),
                 ),
               ),
               const SizedBox(height: 16.0),
@@ -106,9 +108,22 @@ class _ProfileState extends State<Profile> {
               buildTextField('Role', '${user?.role}'),
               buildTextField('BrithdayDate', '${user?.birthdayDate}'),
               const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: signOut,
-                child: const Text('Sign Out'),
+             //ElevatedButton(
+             //  onPressed: signOut,
+             //  child: const Text('Sign Out'),
+             //),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: signOut,
+                    child: const Text('Sign Out'),
+                  ),
+                  ElevatedButton(
+                    onPressed: (){},
+                    child: const Text('Update'),
+                  ),
+                ],
               ),
             ],
           ),
@@ -120,6 +135,7 @@ class _ProfileState extends State<Profile> {
 
 @override
 Widget buildTextField(String labelText, String placeHolder) {
+  
   return Padding(
       padding: const EdgeInsets.only(bottom: 30),
       child: Row(
@@ -132,18 +148,20 @@ Widget buildTextField(String labelText, String placeHolder) {
             height: 5.0,
           ),
           Expanded(
-              child: Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                      width: 200,
-                      child: TextField(
-                        enabled: false,
-                        decoration: InputDecoration(
-                            hintText: placeHolder,
-                            hintStyle: const TextStyle(
-                                color: Colors.black, fontSize: 16)),
-                      ))))
+            child: Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: 200,
+                child: TextField(
+                  controller: TextEditingController(text: placeHolder),
+                  onChanged: (value) {
+                    placeHolder = value;
+                  },
+                ),
+              ),
+            ),
+          ),
+         
         ],
       ));
 }
-
