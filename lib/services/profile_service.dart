@@ -19,6 +19,26 @@ class ProfileService {
       throw Exception('Failed to load profile');
     }
   }
+  
+  Future<void> updateData(userProfile updatedProfile) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final response = await http.put(
+    Uri.parse('$baseUrl/${updatedProfile.id}'),
+    headers: {
+      HttpHeaders.authorizationHeader: prefs.getString('token') ?? '',
+      HttpHeaders.contentTypeHeader: 'application/json',
+    },
+    body: jsonEncode(updatedProfile.toJson()),
+  );
+
+  if (response.statusCode == HttpStatus.ok) {
+    // Actualización exitosa
+    // Puedes mostrar una notificación o realizar cualquier otra acción deseada
+  } else {
+    // Error al actualizar el perfil
+    throw Exception('Failed to update profile');
+  }
+}
 
 }
 

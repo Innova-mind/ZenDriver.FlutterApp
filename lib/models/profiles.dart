@@ -34,5 +34,19 @@ class userProfile {
       description= json['description'],
       imageUrl=json['imageUrl'],
       birthdayDate= json['birthdayDate'];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'firstName': firstName,
+      'lastName': lastName,
+      'userName': userName,
+      'password': password,
+      'phone': phone,
+      'role': role,
+      'description': description,
+      'imageUrl': imageUrl,
+      'birthdayDate': birthdayDate,
+    };
+  }
 }
 

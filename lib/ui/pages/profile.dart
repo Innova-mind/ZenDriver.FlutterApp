@@ -17,6 +17,15 @@ class _ProfileState extends State<Profile> {
   String? tuken;
   String? id;
   int? userId;
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController roleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController imageUrlController = TextEditingController();
+  TextEditingController birthdayDateController = TextEditingController();
 
   initialize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -24,6 +33,15 @@ class _ProfileState extends State<Profile> {
     user = await profileService?.getData(userId!);
     setState(() {
       user = user;
+      firstNameController.text = user?.firstName ?? '';
+      lastNameController.text = user?.lastName ?? '';
+      usernameController.text = user?.userName ?? '';
+      passwordController.text = user?.password ?? '';
+      phoneController.text = user?.phone ?? '';
+      roleController.text = user?.role ?? '';
+      descriptionController.text = user?.description ?? '';
+      imageUrlController.text = user?.imageUrl ?? '';
+      birthdayDateController.text = user?.birthdayDate ?? '';
     });
   }
 
@@ -58,6 +76,27 @@ class _ProfileState extends State<Profile> {
       context,
       MaterialPageRoute(builder: (context) => const SigninScreen()),
     );
+  }
+
+  void updateUserProfile() async {
+    final updatedUser = userProfile(
+      id: user!.id,
+      firstName: user!.firstName,
+      lastName: user!.lastName,
+      userName: usernameController.text,
+      password: passwordController.text,
+      phone: phoneController.text,
+      role: roleController.text,
+      description: descriptionController.text,
+      imageUrl: imageUrlController.text,
+      birthdayDate: birthdayDateController.text,
+    );
+
+    try {
+      await profileService?.updateData(updatedUser);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -100,18 +139,12 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              buildTextField('Username', '${user?.userName}'),
-              buildTextField('Password', '${user?.password}'),
-              buildTextField('Email', 'test@gmail.com'),
-              buildTextField('Phone', '${user?.phone}'),
-              buildTextField('Address', 'Lima'),
-              buildTextField('Role', '${user?.role}'),
-              buildTextField('BrithdayDate', '${user?.birthdayDate}'),
+              buildTextField('Username', usernameController),
+              buildTextField('Password', passwordController),
+              buildTextField('Phone', phoneController),
+              buildTextField('Role', roleController),
+              buildTextField('BrithdayDate', birthdayDateController),
               const SizedBox(height: 16.0),
-             //ElevatedButton(
-             //  onPressed: signOut,
-             //  child: const Text('Sign Out'),
-             //),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -120,7 +153,7 @@ class _ProfileState extends State<Profile> {
                     child: const Text('Sign Out'),
                   ),
                   ElevatedButton(
-                    onPressed: (){},
+                    onPressed: updateUserProfile,
                     child: const Text('Update'),
                   ),
                 ],
@@ -134,8 +167,7 @@ class _ProfileState extends State<Profile> {
 }
 
 @override
-Widget buildTextField(String labelText, String placeHolder) {
-  
+Widget buildTextField(String labelText, TextEditingController controller) {
   return Padding(
       padding: const EdgeInsets.only(bottom: 30),
       child: Row(
@@ -153,15 +185,11 @@ Widget buildTextField(String labelText, String placeHolder) {
               child: Container(
                 width: 200,
                 child: TextField(
-                  controller: TextEditingController(text: placeHolder),
-                  onChanged: (value) {
-                    placeHolder = value;
-                  },
+                  controller: controller,
                 ),
               ),
             ),
           ),
-         
         ],
       ));
 }
