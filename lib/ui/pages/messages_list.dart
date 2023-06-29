@@ -15,6 +15,28 @@ String formatDate(DateTime fecha) {
   return '$hora:$minutos $periodo';
 }
 
+getColorByRole(String role) {
+  switch (role) {
+    case 'driver':
+      return Colors.white;
+    case 'recruiter':
+      return Color.fromARGB(255, 68, 158, 109);
+    default:
+      return Colors.white;
+  }
+}
+
+getColorTextByRole(String role) {
+  switch (role) {
+    case 'driver':
+      return Colors.grey;
+    case 'recruiter':
+      return Colors.white;
+    default:
+      return Colors.grey;
+  }
+}
+
 class MessageList extends StatefulWidget {
   const MessageList({Key? key}) : super(key: key);
   @override
@@ -29,7 +51,8 @@ class _MessageListState extends State<MessageList> {
   Future initialize() async {
     messages = List.empty();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    userId = prefs.getInt('userId');
+    userId = int.parse(prefs.getString('id')!);
+    print(userId);
     messages = await httpHelper.searchLastMessagesByUserId(userId ?? 0);
     setState(() {
       messages = messages;
@@ -41,6 +64,7 @@ class _MessageListState extends State<MessageList> {
     initialize();
     super.initState();
   }
+
   @override
   void dispose() {
     super.dispose();
@@ -56,8 +80,8 @@ class _MessageListState extends State<MessageList> {
         itemCount: messages!.length,
         itemBuilder: (BuildContext context, int index) {
           return Container(
-            decoration: const BoxDecoration(
-                border: Border(
+            decoration: BoxDecoration(
+                border: const Border(
                   bottom: BorderSide(
                     color: Colors.grey,
                   ),
@@ -67,25 +91,37 @@ class _MessageListState extends State<MessageList> {
                   left: BorderSide(color: Colors.grey),
                   right: BorderSide(color: Colors.grey),
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                color: Colors.white),
+                borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                color: (messages![index].emitter.id != userId)
+                    ? getColorByRole(messages![index].emitter.role)
+                    : getColorByRole(messages![index].receiver.role)),
             margin: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage:
-                    NetworkImage(
-                      messages![index].emitter.id != userId ? messages![index].emitter.imageUrl : messages![index].receiver.imageUrl),
+                backgroundImage: NetworkImage(
+                    messages![index].emitter.id != userId
+                        ? messages![index].emitter.imageUrl
+                        : messages![index].receiver.imageUrl),
               ),
               title: Text(
-               messages![index].emitter.id != userId ? ('${messages![index].emitter.firstName} ${messages![index].emitter.lastName}') : 
-               ('${messages![index].receiver.firstName} ${messages![index].receiver.lastName}'),
+                messages![index].emitter.id != userId
+                    ? ('${messages![index].emitter.firstName} ${messages![index].emitter.lastName}')
+                    : ('${messages![index].receiver.firstName} ${messages![index].receiver.lastName}'),
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(messages![index].content,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                  Text(
+                      (messages![index].emitter.id == userId ? 'Yo: ' : '') +
+                          messages![index].content,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: (messages![index].emitter.id != userId)
+                              ? getColorTextByRole(
+                                  messages![index].emitter.role)
+                              : getColorTextByRole(
+                                  messages![index].receiver.role)),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
                 ],
@@ -95,9 +131,13 @@ class _MessageListState extends State<MessageList> {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Messages( 
-                      emitterId: messages![index].emitter.id == userId ? messages![index].receiver.id : messages![index].emitter.id,
-                      receiverId: messages![index].receiver.id == userId ? messages![index].receiver.id : messages![index].emitter.id),
+                    builder: (context) => Messages(
+                        emitterId: messages![index].emitter.id == userId
+                            ? messages![index].receiver.id
+                            : messages![index].emitter.id,
+                        receiverId: messages![index].receiver.id == userId
+                            ? messages![index].receiver.id
+                            : messages![index].emitter.id),
                   ),
                 ).then((_) {
                   initialize();
