@@ -1,3 +1,4 @@
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import '../../models/user.dart';
 import '../../services/login_service.dart';
@@ -31,6 +32,8 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _isButtonEnabled = false;
   bool _isPasswordVisible = false;
   bool _isPasswordConfirmVisible = false;
+  String _role = 'recruiter';
+
 
   void _showDatePicker() async {
     final DateTime? picked = await showDatePicker(
@@ -188,7 +191,7 @@ class _SignupScreenState extends State<SignupScreen> {
               onPressed: () {
                 _showDatePicker();
               },
-              label: Text("Elegir Fecha"),
+              label: const Text("Seleccionar Fecha de nacimiento"),
             ),
             const SizedBox(height: 20),
             TextFormField(
@@ -274,30 +277,47 @@ class _SignupScreenState extends State<SignupScreen> {
               },
             ),
             const SizedBox(height: 20),
-            ToggleButtons(
-              children: [
-                Icon(
-                  Icons.person,
-                ),
-                Icon(Icons.drive_eta_outlined),
-              ],
-              isSelected: selections,
-              onPressed: (index) {
-                setState(() {
-                  selections[index] = !selections[index];
-                  if (index == 0) {
-                    _roleController.text = 'recruiter';
-                  } else {
-                    _roleController.text = 'driver';
-                  }
-                  print(selections);
-                  print(_roleController.text);
-                });
-              },
-              color: Colors.orange,
-            ),
+            AnimatedToggleSwitch<String>.dual(
+                current: _role,
+                first: "recruiter",
+                second: "driver",
+                dif: 50.0,
+                borderColor: Colors.transparent,
+                borderWidth: 5.0,
+                height: 55,
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black26,
+                    spreadRadius: 1,
+                    blurRadius: 2,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _role = value;
+                    if(_role == 'recruiter'){
+                      _roleController.text = 'driver';
+                    }
+                    else{
+                      _roleController.text = 'recruiter';
+                    }
+                    print(_roleController.text);
+                  });
+                  
+                  return Future.delayed(const Duration(seconds: 1));
+
+                },
+                colorBuilder: (value) => _role == "recruiter" ? Colors.blue : Colors.green,
+                iconBuilder: (value) => value == "recruiter"
+                    ? const Icon(Icons.drive_eta_rounded)
+                    : const Icon(Icons.person),
+                textBuilder: (value) => value == "recruiter"
+                    ? const Center(child: Text('Driver'))
+                    : const Center(child: Text('Recruiter')),
+              ),
+            
             const SizedBox(height: 20),
-            Text(_dateTime.toString()),
             ElevatedButton(
               onPressed: _isButtonEnabled ? signUp : null,
               child: const Text('Sign Up'),
