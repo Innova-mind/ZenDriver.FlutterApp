@@ -23,11 +23,27 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _roleController = TextEditingController();
   final TextEditingController _passwordConfirmController =
       TextEditingController();
+  DateTime _dateTime = DateTime.now();
+
   bool _isButtonEnabled = false;
   bool _isPasswordVisible = false;
   bool _isPasswordConfirmVisible = false;
+
+  void _showDatePicker() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _dateTime,
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    ).then((value) {
+      setState(() {
+        _dateTime = value!;
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -67,22 +83,19 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void signUp() async {
-    DateTime now = DateTime.now();
-    String formattedDate =
-        '${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)}';
     try {
       User user = User(
-        id: 0,
-        firstName: _firstNameController.text,
-        lastName: _lastNameController.text,
-        username: _usernameController.text,
-        password: _passwordController.text,
-        phone: '-',
-        role: '-',
-        description: '-',
-        imageUrl: 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg',
-        birthdayDate: formattedDate,
-      );
+          id: 0,
+          firstName: _firstNameController.text,
+          lastName: _lastNameController.text,
+          username: _usernameController.text,
+          password: _passwordController.text,
+          phone: '-',
+          role: _roleController.text,
+          description: '-',
+          imageUrl:
+              'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg',
+          birthdayDate: _dateTime.toString());
       SignupResponse? response = await httpHelper.signUp(user);
       returnToSignIn(response);
     } catch (e) {
@@ -110,6 +123,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    List<bool> selections = [false, false];
     return Scaffold(
         body: SingleChildScrollView(
       padding: const EdgeInsets.all(20),
@@ -158,6 +172,23 @@ class _SignupScreenState extends State<SignupScreen> {
                 }
                 return null;
               },
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              icon: const Icon(
+                Icons.calendar_today,
+                color: Colors.green,
+              ),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(400, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () {
+                _showDatePicker();
+              },
+              label: Text("Elegir Fecha"),
             ),
             const SizedBox(height: 20),
             TextFormField(
@@ -243,6 +274,30 @@ class _SignupScreenState extends State<SignupScreen> {
               },
             ),
             const SizedBox(height: 20),
+            ToggleButtons(
+              children: [
+                Icon(
+                  Icons.person,
+                ),
+                Icon(Icons.drive_eta_outlined),
+              ],
+              isSelected: selections,
+              onPressed: (index) {
+                setState(() {
+                  selections[index] = !selections[index];
+                  if (index == 0) {
+                    _roleController.text = 'recruiter';
+                  } else {
+                    _roleController.text = 'driver';
+                  }
+                  print(selections);
+                  print(_roleController.text);
+                });
+              },
+              color: Colors.orange,
+            ),
+            const SizedBox(height: 20),
+            Text(_dateTime.toString()),
             ElevatedButton(
               onPressed: _isButtonEnabled ? signUp : null,
               child: const Text('Sign Up'),

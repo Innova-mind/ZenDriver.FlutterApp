@@ -55,6 +55,7 @@ class LoginService {
     final response = await http.get(Uri.parse(url), headers: {
       HttpHeaders.authorizationHeader: prefs.getString('token') ?? ''
     });
+
     if (response.statusCode == HttpStatus.ok) {
       return User.fromJson(json.decode(response.body));
     } else {
