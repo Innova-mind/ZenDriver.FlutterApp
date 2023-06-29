@@ -28,6 +28,7 @@ class _SigninScreenState extends State<SigninScreen> {
     _getToken();
     super.initState();
   }
+
   @override
   void dispose() {
     _usernameController.dispose();
@@ -50,11 +51,17 @@ class _SigninScreenState extends State<SigninScreen> {
   void _getToken() async {
     final pref = await _prefs;
     String? token = pref?.getString('token');
+    String? id = pref?.getString('id');
     if (token != null) {
       navigateToHome();
+    } else if (id != null) {
+      User response = await httpHelper.getUserById(int.parse(id.toString()));
+      LoginResponse? response2 = await httpHelper.login(
+          response.username.toString(), response.password);
+      _saveTokenAndUserId(response2);
+      print("loggeado again");
     }
   }
-  
 
   void navigateToHome() {
     Navigator.pushReplacement(

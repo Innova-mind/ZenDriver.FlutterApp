@@ -105,13 +105,13 @@ class _ProfileState extends State<Profile> {
               buildTextField('Email', 'test@gmail.com'),
               buildTextField('Phone', '${user?.phone}'),
               buildTextField('Address', 'Lima'),
-              buildTextField('Role', '${user?.role}'),
+              buildTextField('Role', '${user?.role}', isRole: true),
               buildTextField('BrithdayDate', '${user?.birthdayDate}'),
               const SizedBox(height: 16.0),
-             //ElevatedButton(
-             //  onPressed: signOut,
-             //  child: const Text('Sign Out'),
-             //),
+              //ElevatedButton(
+              //  onPressed: signOut,
+              //  child: const Text('Sign Out'),
+              //),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -120,7 +120,7 @@ class _ProfileState extends State<Profile> {
                     child: const Text('Sign Out'),
                   ),
                   ElevatedButton(
-                    onPressed: (){},
+                    onPressed: () {},
                     child: const Text('Update'),
                   ),
                 ],
@@ -134,8 +134,8 @@ class _ProfileState extends State<Profile> {
 }
 
 @override
-Widget buildTextField(String labelText, String placeHolder) {
-  
+Widget buildTextField(String labelText, String placeHolder,
+    {bool isRole = false}) {
   return Padding(
       padding: const EdgeInsets.only(bottom: 30),
       child: Row(
@@ -157,11 +157,11 @@ Widget buildTextField(String labelText, String placeHolder) {
                   onChanged: (value) {
                     placeHolder = value;
                   },
+                  enabled: !isRole,
                 ),
               ),
             ),
           ),
-         
         ],
       ));
 }
