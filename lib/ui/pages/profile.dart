@@ -94,6 +94,9 @@ class _ProfileState extends State<Profile> {
 
     try {
       await profileService?.updateData(updatedUser);
+      setState(() {
+      user = updatedUser;
+      });
     } catch (e) {
       print(e);
     }
@@ -139,13 +142,12 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              buildTextField('Username', '${user?.userName}'),
-              buildTextField('Password', '${user?.password}'),
-              buildTextField('Email', 'test@gmail.com'),
-              buildTextField('Phone', '${user?.phone}'),
-              buildTextField('Address', 'Lima'),
-              buildTextField('Role', '${user?.role}'),
-              buildTextField('BrithdayDate', '${user?.birthdayDate}'),
+              buildTextField('Username', usernameController),
+              buildTextField('Password', passwordController),
+              buildTextField('Description', descriptionController),
+              buildTextField('Phone', phoneController),
+              buildTextField('Role', roleController),
+              buildTextField('BrithdayDate', birthdayDateController),
               const SizedBox(height: 16.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -187,10 +189,7 @@ Widget buildTextField(String labelText, TextEditingController controller) {
               child: Container(
                 width: 200,
                 child: TextField(
-                  controller: TextEditingController(text: placeHolder),
-                  onChanged: (value) {
-                    placeHolder = value;
-                  },
+                  controller: controller,
                 ),
               ),
             ),
